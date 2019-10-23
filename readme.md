@@ -14,6 +14,7 @@ Laravel (PHP/MySql) - https://laravel.com <br>
 Php - https://www.php.net <br>
 MySql - https://www.mysql.com <br>
 Jquery - https://jquery.com <br>
+Materialize - https://materializecss.com <br>
 Html - Css - Js <br>
 Intervention Image - http://image.intervention.io <br>
 
