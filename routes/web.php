@@ -47,3 +47,5 @@ Route::get('imagen_sm/{nombre?}', 'maincontroller@imagen_sm')->name('imagen_sm')
 Route::get('lista/{estado?}', 'maincontroller@lista')->name('lista');
 
 Route::post('cambiarestado', 'maincontroller@cambiarestado')->name('cambiarestado');
+
+Route::get('vaciar', 'maincontroller@vaciar')->name('vaciar');

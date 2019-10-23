@@ -4,6 +4,8 @@
     <a>Tipo: Demo || Version: 1.0 || Licencia: MIT || Autor: Juan Manuel Tula</a>
 </p>
 
+<a href="http://scanmanager.madmoss.com/" TARGET="_blank">Demo online</a>
+
 ## Detalle de la aplicacion
 
 Aplicación de gestión de imágenes que permite adjuntar una descripción y un autor. Adicionalmente permite establecer distintos estados de estas imágenes.

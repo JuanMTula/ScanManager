@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
+
 
 class maincontroller extends Controller
 {
@@ -94,6 +97,20 @@ class maincontroller extends Controller
         }
 
         return "Error, fuera de respuestas posibles.";
+
+    }
+
+    public function vaciar(){
+
+        //Estados 0 pendientes, 1 aprobados, 2 borrados
+
+        DB::table('scans')->delete();
+
+        $files =   Storage::allFiles();
+
+        Storage::delete($files);
+
+        return "1";
 
     }
 

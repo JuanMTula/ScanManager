@@ -12,6 +12,9 @@
         <title>ScanManager</title>
 
         <style>
+.card-action{
+  padding: 16px 5px!important;
+}
 .btn-plr5{
       padding-left: 5px;
     padding-right: 5px;
@@ -489,12 +492,36 @@
 
         }
 
+        function VaciarTablas(){
+
+
+
+
+          axios.get("{{route('vaciar')}}", {
+
+          })
+          .then(function (response) {
+
+            if (response.data == '1'){
+
+
+              reloadtable(0);
+
+
+              return ;
+
+            }
+
+          })
+
+        }
+
 
     </script>
 
     </head>
     <body>
-    <div class="container">
+    <div class="containerOFF">
 
 
       <div class="row">
@@ -577,14 +604,21 @@
                   <span class="card-title">MadMoss</span>
                   <p>Servicio de gestion de imagenes con cambio de estado, de acceso publico, con fines demostrativos.</p>
                   <div style="height:20px;"></div>
-                  <h5>Creado por Juan Manuel Tula</h5>
+                  <h5>Creado pora</h5>
+                  <h5>Juan Manuel Tula</h5>
                 </div>
-                <div class="card-action">
-                  <a href="http://www.madmoss.com">MadMoss.com</a>
+                <div class="n">
+
+                  <a href="http://www.madmoss.com" class="white-text" >MadMoss.com</a>
+                  <br>
+                  <br>
 
                 </div>
               </div>
             </div>
+                  <br>
+                  <br>
+                  <a onclick="VaciarTablas()" class="blue-text">Vaciar tablas</p>
           </div>
 
 
