@@ -16,8 +16,8 @@ Route::get('/', function () {
     //requerimentos
     if(true){
 
-        //php 7.2
-        $M_php_version_req = 7.2;
+        //php 7.1
+        $M_php_version_req = 7.1;
             if(floatval(substr(phpversion(),0,3)) < $M_php_version_req) {
             die("Requisito necesario : php ".$M_php_version_req." o superior.");
         }

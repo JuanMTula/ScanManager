@@ -266,7 +266,7 @@
                     $('#blah').hide();
                     $('#btnenviar').hide();
 
-                    reloadtable();
+                    reloadtable(0);
 
                     break;
 
@@ -618,7 +618,7 @@
             </div>
                   <br>
                   <br>
-                  <a onclick="VaciarTablas()" class="blue-text">Vaciar tablas</p>
+                  <a href="#!" onclick="VaciarTablas()" class="blue-text">Vaciar tablas</p>
           </div>
 
 
