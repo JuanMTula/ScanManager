@@ -17,9 +17,17 @@ Php - https://www.php.net <br>
 MySql - https://www.mysql.com <br>
 Jquery - https://jquery.com <br>
 Materialize - https://materializecss.com <br>
+SweetAlert2 - https://sweetalert2.github.io <br>
+Axios - https://github.com/axios/axios <br>
 Html - Css - Js <br>
 Intervention Image - http://image.intervention.io <br>
 
 ## Limites de aplicacion
 
 Aplicacion sin fines de lucro, no apto para uso profesional, y de libre distribucion.
+
+## Instalacion
+
+Copiar archivo .env.example a .env y llenar la configuracion <br>
+Crear llave unica de aplicacion -> "php artisan key:generate" <br>
+Migrar la base de datos -> "php artisan migrate" <br>
