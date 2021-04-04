@@ -1,14 +1,15 @@
-<p align="center"><img src="http://www.madmoss.com/images/madmoss.png" ></p>
+<p align="center"><img src="http://scanmanager.cnsxv1.xyz/pictures.png" ></p>
 
 <p align="center">
     <a>Tipo: Demo || Version: 1.0 || Licencia: MIT || Autor: Juan Manuel Tula</a>
 </p>
 
-<a href="http://scanmanager.madmoss.com/" TARGET="_blank">Demo online</a>
+<a href="http://scanmanager.cnsxv1.xyz/" TARGET="_blank">Demo online</a>
 
 ## Detalle de la aplicacion
 
-Aplicación de gestión de imágenes que permite adjuntar una descripción y un autor. Adicionalmente permite establecer distintos estados de estas imágenes.
+Gestion de escaneo de imagenes para analisis con filtros.
+Compatible con todo tipo de dispositivos, permite establecer estados y organizar por medio de estos.
 
 ## Herramientas usadas
 
@@ -16,11 +17,11 @@ Laravel (PHP/MySql) - https://laravel.com <br>
 Php - https://www.php.net <br>
 MySql - https://www.mysql.com <br>
 Jquery - https://jquery.com <br>
-Materialize - https://materializecss.com <br>
+Vue - https://es.vuejs.org/ <br>
+Vue Ionicons - https://mazipan.github.io/vue-ionicons/ <br>
 SweetAlert2 - https://sweetalert2.github.io <br>
 Axios - https://github.com/axios/axios <br>
-Html - Css - Js <br>
-Intervention Image - http://image.intervention.io <br>
+Bulma css - https://bulma.io/ <br>
 
 ## Limites de aplicacion
 
