@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatescansTable extends Migration
+class createscanstable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,9 @@ class CreatescansTable extends Migration
     {
         Schema::create('scans', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
-            $table->text('nombre');
-            $table->text('titulo');
-            $table->text('uid');
+            $table->text('identificador');
+            $table->text('detalle');
+            $table->text('imagen');
             $table->integer('estado');
         });
     }

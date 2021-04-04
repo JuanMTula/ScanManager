@@ -1,1 +1,21 @@
-//
+@import "variables";
+@import "node_modules/bulma/bulma.sass";
+@import "dark";
+@import '~vue-ionicons/ionicons.scss';
+
+@media screen and (min-width: 1408px){
+    .container:not(.is-max-desktop):not(.is-max-widescreen) {
+        max-width: 754px;
+    }
+}
+
+.tiles-width{
+    min-width: 300px;
+    max-width: 400px;
+}
+
+@media screen and (min-width: 769px){
+    .modal-content, .modal-card {
+        width:100%!important;
+}
+}

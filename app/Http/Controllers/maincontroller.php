@@ -2,115 +2,175 @@
 
 namespace App\Http\Controllers;
 
+use App\constants;
+use App\functions;
+use App\scans;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-
-
+use Illuminate\Filesystem\Filesystem;
 
 class maincontroller extends Controller
 {
 
-    public function enviar(){
+    public function enviar(Request $request){
 
+        // validate
+        $toValidate = [
+            'fields'     => [],
+            'constrains' => []
+        ];
 
-        $uid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0x0fff) | 0x4000,mt_rand(0, 0x3fff) | 0x8000, mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+        // identificador
+        $toValidate['fields']['identificador']     = $request['identificador'];
+        $toValidate['constrains']['identificador'] = 'required|string|min:1';
 
-        $data = explode(',', request('imagen'));
-        $content = base64_decode($data[1]);
-        Storage::put( $uid.'.png', $content);
+        // detalle
+        $toValidate['fields']['detalle']     = $request['detalle'];
+        $toValidate['constrains']['detalle'] = 'nullable|string|max:50';
 
+        // imagen
+        $toValidate['fields']['imagen']     = $request['imagen'];
+        $toValidate['constrains']['imagen'] = 'required|file';
 
-        $scans = new \App\scans;
+        if(!functions::checkPhpCodeInImage($_FILES['imagen']))
+            functions::returnErrorAsObject('Archivo de imagen posee codigo mal intencionado.',true);
 
-        $scans->nombre = request('nombre');
-        $scans->titulo = request('titulo');
-        $scans->uid = $uid ;
-        $scans->estado = 0;
+        if(!functions::validImageExtension(functions::getNameExtension($_FILES['imagen']['name'])))
+            functions::returnErrorAsObject('Archivo de imagen posee una extencion invalida.');
 
-        $res = $scans->save();
+        $validator = Validator::make($toValidate['fields'], $toValidate['constrains']);
 
-        if($res){
-            return 1;
-        }else{
-            return 0;
+        $niceNames = array(
+            'identificador'   => 'Identificador de imagen',
+            'detalle'         => 'Detalle de imagen',
+            'imagen'          => 'Archivo de imagen',
+        );
 
+        $validator->setAttributeNames($niceNames);
+
+        if ($validator->fails())
+        {
+            $resp = [];
+            foreach ($validator->errors()->toArray() as $obj){
+                $resp = array_merge($resp,$obj);
+            }
+            functions::returnErrorAsObject($resp);
         }
 
-        return "Error, fuera de respuestas posibles.";
+        $archivo = functions::get_guid_for_file_names().'.'.functions::getNameExtension($_FILES['imagen']['name']);
 
+        $objeto = new scans;
+        $objeto->identificador = $request['identificador'];
+        $objeto->detalle = $request['detalle'];
+        $objeto->imagen = $archivo;
+        $objeto->estado = constants::SCAN_ESTADO_PENDIENTE;
+
+        $store = $this->storeimage($request['imagen'],constants::IMAGES_SECURE_STORAGE,$archivo);
+        if( $store === true)
+            $objeto->save();
+        else
+            functions::returnErrorAsObject($store);
+
+        functions::returnSuccessAsObject('Imagen subida');
     }
 
-    public function cambiarestado(){
+    public static function storeimage($image,$dir,$nombre){
 
-        $res = \App\scans::where('uid', request('uid'))
-                  ->update(['estado' =>  request('estado')]);
+        $request = request();
+        $file = $request['imagen'];
+        if(exif_imagetype($file)) {
+            $max_width = constants::IMAGES_UPLOAD_MAX_WIDTH;
 
+            $width = Image::make($file)->width();
+            $res = Image::make($file);
 
-        if($res){
+            if(!functions::validImageMimes($res->mime()))
+                return "Error, tipo de imagen invalido.";
 
-            return 1;
+            if ($width >= $max_width)
+                $res->resize($max_width, null, function ($constraint) { $constraint->aspectRatio(); });
 
+            $filename = $dir.$nombre ;
+            $res->save(storage_path($filename));
+            chmod(storage_path($filename), 0755);
+            return true;
         }else{
-
-            return 'error';
-
+            return "Error, imagen subida invalida.";
         }
-
-        return "Error, fuera de respuestas posibles.";
-
     }
 
     public function imagen($nombre){
 
-        $contents = Storage::get($nombre.'.png');
+        if (!file_exists(storage_path(constants::IMAGES_SECURE_STORAGE.$nombre)))
+            functions::returnErrorAsObject("Archivo no encontrado");
 
-        $image = Image::make($contents);
-
-        return $image->response('jpg');
-
+        return Image::make(storage_path(constants::IMAGES_SECURE_STORAGE.$nombre))->response();
     }
 
     public function imagen_sm($nombre){
 
-        $contents = Storage::get($nombre.'.png');
+        if (!file_exists(storage_path(constants::IMAGES_SECURE_STORAGE.$nombre)))
+            functions::returnErrorAsObject("Archivo no encontrado");
 
-        $image_resize = Image::make($contents);
-
-        $image_resize->resize(100, null, function ($constraint) {    $constraint->aspectRatio(); });
-
-        return $image_resize->response('jpg');
-
+        return Image::make(storage_path(constants::IMAGES_SECURE_STORAGE.$nombre))
+            ->resize(400, null, function ($constraint) {    $constraint->aspectRatio(); })
+            ->response();
     }
 
     public function lista($estado){
 
-        //Estados 0 pendientes, 1 aprobados, 2 borrados
-
-        $res = \App\scans::where('estado',$estado)->select('nombre','titulo','uid','estado')->get();
-
-        if(count($res) == 0){
-            return 'empty';
-        }else{
-            return $res;
-        }
-
-        return "Error, fuera de respuestas posibles.";
-
+        functions::jsonResponse(scans::where('estado',$estado)->select('identificador','detalle','imagen','estado')->get());
     }
 
     public function vaciar(){
 
-        //Estados 0 pendientes, 1 aprobados, 2 borrados
-
         DB::table('scans')->delete();
+        $file = new Filesystem;
+        $file->cleanDirectory(storage_path(constants::IMAGES_SECURE_STORAGE));
+        functions::returnSuccessAsObject("Imagenes borradas");
+    }
 
-        $files =   Storage::allFiles();
+    public function cambiarestado(Request $request){
 
-        Storage::delete($files);
+        // validate
+        $toValidate = [
+            'fields'     => [],
+            'constrains' => []
+        ];
 
-        return "1";
+        // estado
+        $toValidate['fields']['estado']     = $request['estado'];
+        $toValidate['constrains']['estado'] = 'required|in:1,2,3';
+
+        // imagen
+        $toValidate['fields']['imagen']     = $request['imagen'];
+        $toValidate['constrains']['imagen'] = 'required|exists:scans,imagen';
+
+        $validator = Validator::make($toValidate['fields'], $toValidate['constrains']);
+
+        $niceNames = array(
+            'estado'   => 'Estado de imagen',
+            'imagen'   => 'Archivo de imagen',
+        );
+
+        $validator->setAttributeNames($niceNames);
+
+        if ($validator->fails())
+        {
+            $resp = [];
+            foreach ($validator->errors()->toArray() as $obj){
+                $resp = array_merge($resp,$obj);
+            }
+            functions::returnErrorAsObject($resp);
+        }
+
+        if(scans::where('imagen', $request['imagen'])
+            ->update(['estado' =>  request('estado')]))
+            functions::returnSuccessAsObject("Estado cambiado");
+        else
+            functions::returnErrorAsObject("Error cambiando estado");
 
     }
 
