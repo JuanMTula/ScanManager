@@ -32,10 +32,14 @@ class maincontroller extends Controller
 
         // imagen
         $toValidate['fields']['imagen']     = $request['imagen'];
-        $toValidate['constrains']['imagen'] = 'required|file';
+        $toValidate['constrains']['imagen'] = 'required|file|mimes:jpeg,bmp,png';
 
-        if(!functions::checkPhpCodeInImage($_FILES['imagen']))
-            functions::returnErrorAsObject('Archivo de imagen posee codigo mal intencionado.',true);
+        try{
+            if(!functions::checkPhpCodeInImage($_FILES['imagen']))
+                functions::returnErrorAsObject('Archivo de imagen posee codigo mal intencionado.',true);
+        }catch (\Exception $e){
+            functions::returnErrorAsObject('Archivo de imagen invalido.',false);
+        }
 
         if(!functions::validImageExtension(functions::getNameExtension($_FILES['imagen']['name'])))
             functions::returnErrorAsObject('Archivo de imagen posee una extencion invalida.');

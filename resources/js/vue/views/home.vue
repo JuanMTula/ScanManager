@@ -35,8 +35,8 @@
                </div>
                <div class="column is-half has-text-centered">
                     <div class="is-flex is-justify-content-center">
-                        <figure class="image is-128x128 ">
-                            <img id="imagenSubida" src="pictures.png">
+                        <figure>
+                            <img class="image image-height200" id="imagenSubida" src="pictures.png">
                         </figure>
                     </div>
                     <div class="mt-2">
@@ -67,8 +67,8 @@
                     <article class="tile is-child notification is-info">
                         <p class="title">{{objeto.identificador}}</p>
                         <p class="subtitle">{{objeto.detalle}}</p>
-                        <figure class="image is-4by3">
-                            <img :src="ruta_sm+objeto.imagen">
+                        <figure >
+                            <img class="image image-height200" :src="ruta_sm+objeto.imagen">
                         </figure>
                     </article>
                 </div>
@@ -452,5 +452,8 @@ height:auto;
     max-height:0;
 }
 
+.image-height200{
+    max-height: 200px;
+}
 
 </style>
