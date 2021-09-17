@@ -16,7 +16,7 @@ class createscanstable extends Migration
         Schema::create('scans', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
             $table->text('identificador');
-            $table->text('detalle');
+            $table->text('detalle')->nullable();
             $table->text('imagen');
             $table->integer('estado');
         });
