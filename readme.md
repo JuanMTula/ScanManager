@@ -1,10 +1,10 @@
-<p align="center"><img src="http://scanmanager.cnsxv2.xyz/pictures.png" ></p>
+<p align="center"><img src="http://scanmanager.cnsxv3.online/pictures.png" ></p>
 
 <p align="center">
     <a>Tipo: Demo || Version: 1.0 || Licencia: MIT || Autor: Juan Manuel Tula</a>
 </p>
 
-<a href="http://scanmanager.cnsxv2.xyz/" TARGET="_blank">Demo online</a>
+<a href="http://scanmanager.cnsxv3.online/" TARGET="_blank">Demo online</a>
 
 ## Detalle de la aplicacion
 
